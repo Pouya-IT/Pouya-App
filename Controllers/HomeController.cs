@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using System.Collections.Generic;
+using System.Data.Entity.Validation;
 
 namespace Pouya.Controllers
 {
@@ -52,7 +51,7 @@ namespace Pouya.Controllers
                     Repository.Adresse = model.Adresse;
                     Repository.Benutzername =   model.Benutzername;
                     Repository.E_Mail = model   .E_Mail;
-                    Repository.IDE_Delete_State = 0;
+                    Repository.IDE_Delete_State = false;
                     Repository.Land = model.Land;
                     Repository.Passwort = model.Passwort.Trim();
                     Repository.Postleitzahl = model.Postleitzahl;
@@ -104,7 +103,7 @@ namespace Pouya.Controllers
             }
         }
 
-        [HttpGet,Authorize]
+        [HttpGet,AllowAnonymous]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -118,7 +117,7 @@ namespace Pouya.Controllers
             return View();
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, AllowAnonymous]
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

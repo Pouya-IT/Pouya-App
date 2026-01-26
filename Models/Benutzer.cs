@@ -47,13 +47,13 @@ namespace Pouya.Models
 
 
         //Virtual Delete
-        public int IDE_Delete_State { get; set; }
+        public bool IDE_Delete_State { get; set; } = false;
 
         //***********************************************************
         //Navigation To Children
         public virtual ICollection<Prdukte> Prdukte { get; set; }
 
-        public virtual ICollection<Feedback> Feedback { get; set; }
+        //public virtual ICollection<Feedback> Feedback { get; set; }
         //***********************************************************
     }
 }

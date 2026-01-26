@@ -27,6 +27,8 @@ namespace Pouya.Models
 
         [Display(Name = "Produktnummer")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
+        [MinLength(1, ErrorMessage = "Die Zeichenlänge darf 1 Zeichen nicht unterschreiten")]
+        [MaxLength(100, ErrorMessage = "Die Zeichenlänge darf 100 Zeichen nicht überschreiten")]
         public string Produktnummer { get; set; }
 
 
@@ -62,7 +64,7 @@ namespace Pouya.Models
 
 
         //Virtual Delete
-        public bool IDE_Delete_State { get; set; }
+        public bool IDE_Delete_State { get; set; } = false;
 
     }
 }

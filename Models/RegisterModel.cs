@@ -65,7 +65,7 @@ namespace Pouya.Models
 
         [Display(Name = "Land")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
-        [MaxLength(50, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
+        [MaxLength(10, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
         [MinLength(2, ErrorMessage = "Die Zeichenlänge darf 2 Zeichen nicht unterschreiten")]
         public string Land { get; set; }
 
@@ -73,7 +73,7 @@ namespace Pouya.Models
 
         [Display(Name = "Stadt")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
-        [MaxLength(50, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
+        [MaxLength(10, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
         [MinLength(2, ErrorMessage = "Die Zeichenlänge darf 2 Zeichen nicht unterschreiten")]
         public string Stadt { get; set; }
 
