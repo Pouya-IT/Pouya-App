@@ -7,6 +7,12 @@
 <div class="form-horizontal">
     <h4>RegisterModel</h4>
     <hr />
+    @if (ViewBag.Massege != null)
+    {
+        <span class="Bag_Msg" style="color:green;">
+            @ViewBag.Massege
+        </span>
+    }
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
         @Html.LabelFor(model => model.Vorname, htmlAttributes: new { @class = "control-label col-md-2" })

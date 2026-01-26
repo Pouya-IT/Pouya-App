@@ -5,13 +5,13 @@
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
+    <h4>Login</h4>
     @if (ViewBag.Erorr != null)
     {
         <span class="Bag_Msg" style="color:red;">
             @ViewBag.Erorr
         </span>
     }
-    <h4>Login</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">

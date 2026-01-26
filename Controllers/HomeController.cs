@@ -123,5 +123,32 @@ namespace Pouya.Controllers
             ViewBag.Message = "Your contact page.";
             return View();
         }
+
+        [HttpPost,AllowAnonymous]
+        public ActionResult Contact(Models.FeedbackModel Feedback_Model)
+        {
+            var Repository = new Models.Feedback();
+
+            if (!ModelState.IsValid) 
+            { 
+                return View(Feedback_Model);
+            }
+
+            using(var Adapter = new Models.DatabaseContex())
+            {
+                Repository.Name= Feedback_Model.Name;
+                Repository.Email= Feedback_Model.Email;
+                Repository.Text = Feedback_Model.Text;
+
+                Repository.IsApproved = false;
+                Repository.CreatedDate = DateTime.UtcNow;
+                Repository.IDE_Delete_State = false;
+
+                Adapter.Entry(Repository).State=System.Data.Entity.EntityState.Added;
+                Adapter.SaveChanges();
+                ViewBag.Massege = "Vielen Dank! Ihr Feedback wurde erfolgreich gespeichert.";
+            }
+            return View(Feedback_Model);
+        }
     }
 }
