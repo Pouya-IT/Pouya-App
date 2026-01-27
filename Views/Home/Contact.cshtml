@@ -1,4 +1,4 @@
-﻿@model Pouya.Models.FeedbackModel
+﻿@model Pouya.Models.FeedbackPageMV
 
 @{
     ViewBag.Title = "Contact";
@@ -28,35 +28,35 @@
 <div class="form-horizontal">
     <h4>Feedback</h4>
     <hr />
-    @if (ViewBag.Massege != null)
+    @if (TempData["Success"] != null)
     {
-        <span class="Bag_Msg" style="color:green;">
-            @ViewBag.Massege
+        <span class="alert alert-success"  >
+            @TempData["Success"]
         </span>
     }
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
-        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.CreateForm.Name, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.CreateForm.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CreateForm.Name, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.CreateForm.Email, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.CreateForm.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CreateForm.Email, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.CreateForm.Text, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextAreaFor(model => model.Text, new { htmlAttributes = new { @class = "form-control", row = 5, placeholder = "Ihre Nachricht..." } })
-            @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+            @Html.TextAreaFor(model => model.CreateForm.Text, new { htmlAttributes = new { @class = "form-control", row = 5, placeholder = "Ihre Nachricht..." } })
+            @Html.ValidationMessageFor(model => model.CreateForm.Text, "", new { @class = "text-danger" })
         </div>
     </div>
     &nbsp;
@@ -67,3 +67,43 @@
     </div>
 </div>
 }
+
+
+<hr/>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FeedBackList.First().Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FeedBackList.First().Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FeedBackList.First().Text)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.FeedBackList)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+
+</table>

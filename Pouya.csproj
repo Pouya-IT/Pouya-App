@@ -133,6 +133,7 @@
     </Compile>
     <Compile Include="Models\Benutzer.cs" />
     <Compile Include="Models\DatabaseContex.cs" />
+    <Compile Include="Models\FeedbackPageMV.cs" />
     <Compile Include="Models\FeedbackModel.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Prdukte.cs" />

@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using Pouya.Models;
 
 namespace Pouya.Controllers
 {
@@ -117,11 +118,25 @@ namespace Pouya.Controllers
             return View();
         }
 
+
+
         [HttpGet, AllowAnonymous]
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-            return View();
+            ViewBag.Message = "contact";
+
+            var VM = new Models.FeedbackPageMV();
+            VM.CreateForm = new Models.FeedbackModel();
+
+            using(var Adapter = new Models.DatabaseContex())
+            {
+                
+                VM.FeedBackList = Adapter.Feedback
+                    .Where(p=>p.IsApproved && !p.IDE_Delete_State)
+                    .OrderByDescending(p=>p.CreatedDate)
+                    .ToList();
+            }
+            return View(VM);
         }
 
         [HttpPost,AllowAnonymous]
@@ -146,7 +161,7 @@ namespace Pouya.Controllers
 
                 Adapter.Entry(Repository).State=System.Data.Entity.EntityState.Added;
                 Adapter.SaveChanges();
-                ViewBag.Massege = "Vielen Dank! Ihr Feedback wurde erfolgreich gespeichert.";
+                TempData["Success"] = "Vielen Dank! Ihr Feedback wurde erfolgreich gespeichert.";
             }
             return View(Feedback_Model);
         }
