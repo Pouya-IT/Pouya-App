@@ -140,20 +140,28 @@ namespace Pouya.Controllers
         }
 
         [HttpPost,AllowAnonymous]
-        public ActionResult Contact(Models.FeedbackModel Feedback_Model)
+        public ActionResult Contact(Models.FeedbackPageMV model)
         {
-            var Repository = new Models.Feedback();
-
             if (!ModelState.IsValid) 
             { 
-                return View(Feedback_Model);
+                using(var Adapter = new Models.DatabaseContex())
+                {
+                    model.CreateForm = new Models.FeedbackModel();
+                    model.FeedBackList= Adapter.Feedback
+                    .Where(p => p.IsApproved && !p.IDE_Delete_State)
+                    .OrderByDescending(p => p.CreatedDate)
+                    .ToList();
+                    return View(model);
+                }
             }
 
             using(var Adapter = new Models.DatabaseContex())
-            {
-                Repository.Name= Feedback_Model.Name;
-                Repository.Email= Feedback_Model.Email;
-                Repository.Text = Feedback_Model.Text;
+            { 
+                var Repository = new Models.Feedback();
+
+                Repository.Name= model.CreateForm.Name;
+                Repository.Email= model.CreateForm.Email;
+                Repository.Text = model.CreateForm.Text;
 
                 Repository.IsApproved = false;
                 Repository.CreatedDate = DateTime.UtcNow;
@@ -162,8 +170,13 @@ namespace Pouya.Controllers
                 Adapter.Entry(Repository).State=System.Data.Entity.EntityState.Added;
                 Adapter.SaveChanges();
                 TempData["Success"] = "Vielen Dank! Ihr Feedback wurde erfolgreich gespeichert.";
+
+                model.FeedBackList = Adapter.Feedback
+                                            .Where(p => p.IsApproved && !p.IDE_Delete_State)
+                                            .OrderByDescending(p => p.CreatedDate)
+                                            .ToList();
             }
-            return View(Feedback_Model);
+            return View(model);
         }
     }
 }
