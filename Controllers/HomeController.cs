@@ -123,7 +123,7 @@ namespace Pouya.Controllers
         [HttpGet, AllowAnonymous]
         public ActionResult Contact()
         {
-            ViewBag.Message = "contact";
+            //ViewBag.Message = "contact";
 
             var VM = new Models.FeedbackPageMV();
             VM.CreateForm = new Models.FeedbackModel();
@@ -135,6 +135,19 @@ namespace Pouya.Controllers
                     .Where(p=>p.IsApproved && !p.IDE_Delete_State)
                     .OrderByDescending(p=>p.CreatedDate)
                     .ToList();
+
+                bool IsAdmin = false;
+                if (User.Identity.IsAuthenticated) 
+                { 
+                    var UserName=User.Identity.Name;
+                    var UserAdmin=Adapter.Benutzer.FirstOrDefault(p=>p.Benutzername == UserName);
+                    if(UserAdmin!=null && UserAdmin.Id_Role == 1)
+                    {
+                        IsAdmin= true;
+                    }
+                    ViewBag.IsAdmin = IsAdmin;
+                }
+
             }
             return View(VM);
         }
@@ -151,7 +164,6 @@ namespace Pouya.Controllers
                     .Where(p => p.IsApproved && !p.IDE_Delete_State)
                     .OrderByDescending(p => p.CreatedDate)
                     .ToList();
-                    return View(model);
                 }
             }
 
@@ -177,6 +189,42 @@ namespace Pouya.Controllers
                                             .ToList();
             }
             return View(model);
+        }
+
+
+        //To Do
+        [HttpPost]
+        [Authorize]
+        public ActionResult Bestätigung(int id)
+        {
+            var UserName= User.Identity.Name;
+            if (id <= 0)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
+            }
+            using(var Adapter = new Models.DatabaseContex())
+            {
+                var AdminUser = Adapter.Benutzer
+                    .FirstOrDefault(p => p.Benutzername.ToLower() == UserName.ToLower() 
+                    && p.Id_Role == 1);
+
+                var FindFeedback = Adapter.Feedback.Find(id);
+                if (AdminUser == null || FindFeedback == null)
+                {
+                    return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
+                }
+
+                FindFeedback.IsApproved = true;
+                FindFeedback.CreatedDate = DateTime.UtcNow;
+                Adapter.Entry(FindFeedback).State=System.Data.Entity.EntityState.Modified;
+                Adapter.SaveChanges();
+                TempData["Success"] = "Das Feedback wurde freigegeben.";
+            }
+            return RedirectToAction ("Contact");
         }
     }
 }

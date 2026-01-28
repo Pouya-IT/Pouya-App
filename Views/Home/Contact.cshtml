@@ -1,10 +1,10 @@
 ﻿@model Pouya.Models.FeedbackPageMV
 
 @{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = "Kontakt";
 }
 <main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+    <h2 id="title">@ViewBag.Title</h2>
     <h3>@ViewBag.Message</h3>
 
     <address>
@@ -19,59 +19,56 @@
     </address>
 </main>
 
-
-
+<hr />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>Feedback</h4>
-    <hr />
-    @if (TempData["Success"] != null)
-    {
-        <span class="alert alert-success"  >
-            @TempData["Success"]
-        </span>
-    }
+    <div class="form-horizontal">
+        <h4>Ihre Meinung</h4>
+        &nbsp;
+        @if (TempData["Success"] != null)
+        {
+            <span class="alert alert-success">
+                @TempData["Success"]
+            </span>
+        }
 
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.CreateForm.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.CreateForm.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.CreateForm.Name, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateForm.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreateForm.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CreateForm.Name, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.CreateForm.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.CreateForm.Email, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.CreateForm.Email, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateForm.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreateForm.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CreateForm.Email, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.CreateForm.Text, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextAreaFor(model => model.CreateForm.Text, new { htmlAttributes = new { @class = "form-control", row = 5, placeholder = "Ihre Nachricht..." } })
-            @Html.ValidationMessageFor(model => model.CreateForm.Text, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateForm.Text, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.CreateForm.Text, new { htmlAttributes = new { @class = "form-control", row = 20, placeholder = "Ihre Nachricht..." } })
+                @Html.ValidationMessageFor(model => model.CreateForm.Text, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        &nbsp;
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
         </div>
     </div>
-    &nbsp;
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-primary" />
-        </div>
-    </div>
-</div>
 }
-
-
-<hr/>
-
-
+<hr />
+<h4>Was unsere Nutzer sagen</h4>
+&nbsp;
 <table class="table">
     <tr>
         <th>
@@ -98,12 +95,30 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Text)
             </td>
+            @* To Do *@
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @if (ViewBag.IsAdmin == true)
+                {
+                    using (Html.BeginForm("Bestätigung", "Home", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", item.Id_Feedback)
+                        <button type="submit" class="btn btn-success">Bestätigen</button>
+                    }
+                }
+                @if (ViewBag.IsAdmin == true)
+                {
+                    using (Html.BeginForm("Delete", "Home", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", item.Id_Feedback)
+                        <button type="submit" class="btn btn-success">Delete</button>
+                    }
+                }
+                @using (Html.BeginForm("Details", "Home", FormMethod.Post))
+                {
+                    @Html.Hidden("id", item.Id_Feedback)
+                    <button type="submit" class="btn btn-success">Details</button>
+                }
             </td>
         </tr>
     }
-
 </table>
