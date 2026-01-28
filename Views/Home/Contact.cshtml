@@ -95,29 +95,27 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Text)
             </td>
-            @* To Do *@
+
             <td>
                 @if (ViewBag.IsAdmin == true)
                 {
-                    using (Html.BeginForm("Bestätigung", "Home", FormMethod.Post))
+                    using (Html.BeginForm("Bestätigung", "Home", FormMethod.Post, new { @class = "d-inline" }))
                     {
                         @Html.Hidden("id", item.Id_Feedback)
                         <button type="submit" class="btn btn-success">Bestätigen</button>
                     }
-                }
-                @if (ViewBag.IsAdmin == true)
-                {
-                    using (Html.BeginForm("Delete", "Home", FormMethod.Post))
+                    using (Html.BeginForm("Delete", "Home", FormMethod.Post, new { @class = "d-inline" }))
                     {
                         @Html.Hidden("id", item.Id_Feedback)
-                        <button type="submit" class="btn btn-success">Delete</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     }
                 }
-                @using (Html.BeginForm("Details", "Home", FormMethod.Post))
+                @using (Html.BeginForm("Details", "Home", FormMethod.Post, new { @class = "d-inline" }))
                 {
                     @Html.Hidden("id", item.Id_Feedback)
-                    <button type="submit" class="btn btn-success">Details</button>
+                    <button type="submit" class="btn btn-secondary">Details</button>
                 }
+
             </td>
         </tr>
     }
