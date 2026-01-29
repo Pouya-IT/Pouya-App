@@ -26,11 +26,15 @@ namespace Pouya.Models
 
         public string Email { get; set; }
 
+
+        [Display(Name = "Ihre Meinung")]
         public string Text { get; set; }
 
         public bool IsApproved { get; set; } = false;
 
-        public  DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+        [Display(Name = "Datum")]
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         //Virtual Delete
         public bool IDE_Delete_State { get; set; } = false;

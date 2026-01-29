@@ -24,7 +24,7 @@ namespace Pouya.Models
 
 
 
-        [Display(Name = "Vorschläge_und_Beschwerden")]
+        [Display(Name = "Ihre Meinung")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
         [MinLength(5, ErrorMessage = "Die Zeichenlänge darf 5 Zeichen nicht unterschreiten")]
         [MaxLength(500, ErrorMessage = "Die Zeichenlänge darf 500 Zeichen nicht überschreiten")]

@@ -12,7 +12,7 @@ namespace Pouya.Models
     public class Role
     {
 
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id_Role { get; set; }
 
 
@@ -22,7 +22,7 @@ namespace Pouya.Models
 
 
         //Navigation To Children
-        public virtual ICollection <Benutzer> Benutzers { get; set; }
+        public virtual ICollection<Benutzer> Benutzers { get; set; }
 
     }
 }

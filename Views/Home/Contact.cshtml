@@ -99,7 +99,7 @@
             <td>
                 @if (ViewBag.IsAdmin == true)
                 {
-                    using (Html.BeginForm("Bestätigung", "Home", FormMethod.Post, new { @class = "d-inline" }))
+                    using (Html.BeginForm("BestätigungFeedback", "Home", FormMethod.Post, new { @class = "d-inline" }))
                     {
                         @Html.Hidden("id", item.Id_Feedback)
                         <button type="submit" class="btn btn-success">Bestätigen</button>
@@ -110,11 +110,13 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     }
                 }
-                @using (Html.BeginForm("Details", "Home", FormMethod.Post, new { @class = "d-inline" }))
-                {
-                    @Html.Hidden("id", item.Id_Feedback)
-                    <button type="submit" class="btn btn-secondary">Details</button>
-                }
+                @*@using (Html.BeginForm("DetailsFeedback", "Home", FormMethod.Post, new { @class = "d-inline" }))
+                    {
+                        @Html.Hidden("id", item.Id_Feedback)
+                        <button type="submit" class="btn btn-secondary">Details</button>
+                    }*@
+
+                @Html.ActionLink("Details", "DetailsFeedback", "Home", new { id = item.Id_Feedback }, new { @class = "btn btn-secondary d-inline me-1" })
             </td>
         </tr>
     }

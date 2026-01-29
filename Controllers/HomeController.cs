@@ -1,30 +1,34 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
+using System.Linq;
+using Pouya.Models;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
-using Pouya.Models;
+
 
 namespace Pouya.Controllers
 {
     public class HomeController : Controller
     {
-        [HttpGet, Authorize]
+        [HttpGet]
+        [Authorize]
         public ActionResult Index()
         {
             return View();
         }
 
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
 
 
-        [HttpPost, AllowAnonymous]
+        [HttpPost]
+        [AllowAnonymous]
         public ActionResult Register(Models.RegisterModel model)
         {
 
@@ -69,14 +73,16 @@ namespace Pouya.Controllers
         }
 
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
 
 
-        [HttpPost, AllowAnonymous]
+        [HttpPost]
+        [AllowAnonymous]
         public ActionResult Login(Models.Login LoginModel)
         {
             if (!ModelState.IsValid)
@@ -105,14 +111,17 @@ namespace Pouya.Controllers
         }
 
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
             return View();
         }
 
-        [HttpGet, Authorize]
+
+        [HttpGet]
+        [Authorize]
         public ActionResult Produkte()
         {
             ViewBag.Message = "Produkte";
@@ -120,7 +129,8 @@ namespace Pouya.Controllers
         }
 
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Contact()
         {
             var VM = new Models.FeedbackPageMV();
@@ -154,7 +164,8 @@ namespace Pouya.Controllers
         }
 
 
-        [HttpPost, AllowAnonymous]
+        [HttpPost]
+        [AllowAnonymous]
         public ActionResult Contact(Models.FeedbackPageMV model)
         {
             if (!ModelState.IsValid)
@@ -196,7 +207,7 @@ namespace Pouya.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult Bestätigung(int id)
+        public ActionResult BestätigungFeedback(int id)
         {
             var UserName = User.Identity.Name;
             if (id <= 0)
@@ -259,6 +270,19 @@ namespace Pouya.Controllers
                 TempData["Success"] = "Das Feedback wurde erfolgreich gelöscht.";
             }
             return RedirectToAction("Contact");
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult DetailsFeedback(int id)
+        {
+            using (var Adapter = new Models.DatabaseContex())
+            {
+                var item = Adapter.Feedback.Find(id);
+                if (item == null) return HttpNotFound();
+                return View(item);
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Pouya.Models
 
         //Navigation Property
         [ForeignKey("Id_Role")]
-        public virtual Role Role { get; set; } 
+        public virtual Role Role { get; set; }
         //*******************************************
         public string Vorname { get; set; }
 
@@ -33,7 +33,7 @@ namespace Pouya.Models
 
         public string Passwort { get; set; }
 
-        public string E_Mail {get; set; }
+        public string E_Mail { get; set; }
 
         public string Land { get; set; }
 

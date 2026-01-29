@@ -10,9 +10,9 @@ namespace Pouya.Models
 {
     public class FeedbackPageMV
     {
-        public FeedbackModel CreateForm {  get; set; }
+        public FeedbackModel CreateForm { get; set; }
 
-        public List <Feedback> FeedBackList {  get; set; }
-        
+        public List<Feedback> FeedBackList { get; set; }
+
     }
 }

@@ -11,8 +11,8 @@ namespace Pouya.Models
     public class DatabaseContex : System.Data.Entity.DbContext
     {
 
-        public DatabaseContex() 
-            : base("Pouya") 
+        public DatabaseContex()
+            : base("Pouya")
         {
             Database.SetInitializer<DatabaseContex>(null);
         }
@@ -26,7 +26,7 @@ namespace Pouya.Models
         public System.Data.Entity.DbSet<Feedback> Feedback { get; set; }
 
 
-        public System.Data.Entity.DbSet<Role> Role {  get; set; }
+        public System.Data.Entity.DbSet<Role> Role { get; set; }
 
     }
 }

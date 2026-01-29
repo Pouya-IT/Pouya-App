@@ -98,7 +98,7 @@ namespace Pouya.Models
 
         [Display(Name = "Telefon")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
-        [RegularExpression(@"^(\+49|0)[0-9\s]{7,15}$",ErrorMessage = "Ungültige Telefonnummer")]
+        [RegularExpression(@"^(\+49|0)[0-9\s]{7,15}$", ErrorMessage = "Ungültige Telefonnummer")]
         //[MaxLength(12, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
         //[MinLength(4, ErrorMessage = "Die Zeichenlänge darf 4 Zeichen nicht unterschreiten")]
         public string Telefon { get; set; }
