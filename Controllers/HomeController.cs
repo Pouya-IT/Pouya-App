@@ -228,6 +228,9 @@ namespace Pouya.Controllers
             return RedirectToAction("Contact");
         }
 
+
+        [HttpPost]
+        [Authorize]
         public ActionResult DeleteFeedback(int id)
         {
             var UserName = User.Identity.Name;
