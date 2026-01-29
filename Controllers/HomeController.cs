@@ -104,6 +104,7 @@ namespace Pouya.Controllers
             }
         }
 
+
         [HttpGet, AllowAnonymous]
         public ActionResult About()
         {
@@ -152,6 +153,7 @@ namespace Pouya.Controllers
             return View(VM);
         }
 
+
         [HttpPost, AllowAnonymous]
         public ActionResult Contact(Models.FeedbackPageMV model)
         {
@@ -192,7 +194,6 @@ namespace Pouya.Controllers
         }
 
 
-        //To Do
         [HttpPost]
         [Authorize]
         public ActionResult Bestätigung(int id)
@@ -223,6 +224,36 @@ namespace Pouya.Controllers
                 Adapter.Entry(FindFeedback).State = System.Data.Entity.EntityState.Modified;
                 Adapter.SaveChanges();
                 TempData["Success"] = "Das Feedback wurde freigegeben.";
+            }
+            return RedirectToAction("Contact");
+        }
+
+        public ActionResult DeleteFeedback(int id)
+        {
+            var UserName = User.Identity.Name;
+            if (id <= 0)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
+            }
+            using (var Adapter = new Models.DatabaseContex())
+            {
+                var AdminUser = Adapter.Benutzer
+                    .FirstOrDefault(p => p.Benutzername.ToLower() == UserName.ToLower()
+                    && p.Id_Role == 1);
+
+                var FindFeedback = Adapter.Feedback.Find(id);
+                if (AdminUser == null || FindFeedback == null)
+                {
+                    return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
+                }
+                FindFeedback.IDE_Delete_State = true;
+                Adapter.Entry(FindFeedback).State = System.Data.Entity.EntityState.Modified;
+                Adapter.SaveChanges();
+                TempData["Success"] = "Das Feedback wurde erfolgreich gelöscht.";
             }
             return RedirectToAction("Contact");
         }

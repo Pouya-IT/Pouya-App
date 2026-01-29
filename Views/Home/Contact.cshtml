@@ -104,7 +104,7 @@
                         @Html.Hidden("id", item.Id_Feedback)
                         <button type="submit" class="btn btn-success">Bestätigen</button>
                     }
-                    using (Html.BeginForm("Delete", "Home", FormMethod.Post, new { @class = "d-inline" }))
+                    using (Html.BeginForm("DeleteFeedback", "Home", FormMethod.Post, new { @class = "d-inline" }))
                     {
                         @Html.Hidden("id", item.Id_Feedback)
                         <button type="submit" class="btn btn-danger">Delete</button>
@@ -115,7 +115,6 @@
                     @Html.Hidden("id", item.Id_Feedback)
                     <button type="submit" class="btn btn-secondary">Details</button>
                 }
-
             </td>
         </tr>
     }
