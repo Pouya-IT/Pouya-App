@@ -9,7 +9,7 @@ using System.Data.Entity.Validation;
 
 namespace Pouya.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         [HttpGet]
         [Authorize]
@@ -67,8 +67,8 @@ namespace Pouya.Controllers
                     Adapter.Entry(Repository).State = System.Data.Entity.EntityState.Added;
                     Adapter.SaveChanges();
                     ViewBag.Massege = "Neuer Benutzer erfolgreich erstellt";
+                    return this.View(model);
                 }
-                return this.View(model);
             }
         }
 
@@ -108,6 +108,14 @@ namespace Pouya.Controllers
                     return this.RedirectToAction("Index");
                 }
             }
+        }
+
+
+        [HttpGet]
+        public ActionResult SignOut()
+        {
+            System.Web.Security.FormsAuthentication.SignOut();
+            return this.RedirectToAction("Login");
         }
 
 
@@ -177,6 +185,7 @@ namespace Pouya.Controllers
                     .Where(p => p.IsApproved && !p.IDE_Delete_State)
                     .OrderByDescending(p => p.CreatedDate)
                     .ToList();
+                    return View(model);
                 }
             }
 
@@ -200,8 +209,9 @@ namespace Pouya.Controllers
                                             .Where(p => p.IsApproved && !p.IDE_Delete_State)
                                             .OrderByDescending(p => p.CreatedDate)
                                             .ToList();
+                return View(model);
             }
-            return View(model);
+
         }
 
 

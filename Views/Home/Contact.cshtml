@@ -61,7 +61,7 @@
         &nbsp;
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Speichern" class="btn btn-primary" />
             </div>
         </div>
     </div>
@@ -107,7 +107,7 @@
                     using (Html.BeginForm("DeleteFeedback", "Home", FormMethod.Post, new { @class = "d-inline" }))
                     {
                         @Html.Hidden("id", item.Id_Feedback)
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">Löschen</button>
                     }
                 }
                 @*@using (Html.BeginForm("DetailsFeedback", "Home", FormMethod.Post, new { @class = "d-inline" }))

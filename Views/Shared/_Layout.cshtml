@@ -6,69 +6,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Meine ASP.NET-Anwendung</title>
     @Styles.Render("~/Content/css")
+    <link href="~/Content/bootstrap-icons-1.13.1/bootstrap-icons.css" rel="stylesheet" />
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container">
-            @Html.ActionLink("Pouya Design", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Navigation umschalten" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            @Html.ActionLink("Pouya Design", "Index", "Home", null, new { @class = "navbar-brand" })
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Startseite", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Informationen", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Produkte", "Produkte", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Kontakt", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>
 
-                        @if (User.Identity.IsAuthenticated && (!string.IsNullOrEmpty(this.User.Identity.Name)))
-                        {
-                            using (var adapter = new Pouya.Models.DatabaseContex())
-                            {
-                                var user = adapter.Benutzer.Where(p => p.Benutzername.ToLower() == this.User.Identity.Name).FirstOrDefault();
-                                if (user != null)
-                                {
-                                <li>
-                                    <a style="color: white;" href="/Home/SignOut"><span class="glyphicon glyphicon-log-out"></span></a>
-                                </li>
-                                <li>
-                                    <a style="color: white; font-size:12px;"> Willkommen @user.Benutzername </a>
-                                </li>
-                            }
-                        }
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- left nav links -->
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                    <li class="nav-item">@Html.ActionLink("Startseite", "Index", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Informationen", "About", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Produkte", "Produkte", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Kontakt", "Contact", "Home", null, new { @class = "nav-link" })</li>
+                </ul>
+
+                <!-- right side: user + search -->
+                <ul class="navbar-nav ms-auto mb-2 mb-sm-0 align-items-center">
+                    @if (ViewBag.UserName != null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("SignOut","Home")" title="Abmelden">
+                                <!-- bootstrap-icons example -->
+                                <i class="bi bi-box-arrow-right"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link disabled" style="cursor:default;">
+                                Willkommen @Html.Encode(ViewBag.UserName)
+                            </span>
+                        </li>
                     }
                     else
                     {
-                        <li>
-                            <a style="color: white;" href="/Home/Login"><span class="glyphicon glyphicon-log-in"></span></a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Login","Home")">
+                                <i class="bi bi-box-arrow-in-right"></i> Anmeldung
+                            </a>
                         </li>
                     }
 
-
-
-
-
-                    </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="text" placeholder="Suche">
-                        <button class="btn btn-primary" type="button">Suche</button>
-                    </form>
-                </div>
+                    <!-- search form (کوچک) -->
+                    <li class="nav-item">
+                        <form class="d-flex" role="search" action="@Url.Action("Search","Home")" method="get">
+                            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Suche" aria-label="Search">
+                            <button class="btn btn-sm btn-primary" type="submit">Suche</button>
+                        </form>
+                    </li>
+                </ul>
             </div>
-        </nav>
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p style="text-align:center">&copy; @DateTime.Now.Year - P.D </p>
-            </footer>
         </div>
+    </nav>
 
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)
-    </body>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p style="text-align:center">&copy; @DateTime.Now.Year - P.D </p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
 </html>
