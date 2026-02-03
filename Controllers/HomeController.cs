@@ -31,45 +31,44 @@ namespace Pouya.Controllers
         [AllowAnonymous]
         public ActionResult Register(Models.RegisterModel model)
         {
-
             var Repository = new Models.Benutzer();
 
-            using (var Adapter = new Models.DatabaseContex())
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return this.View(model);
-                }
-
-                bool FindRegister = Adapter.Benutzer.Any
-                    (x => x.Benutzername == model.Benutzername);
-
-                if (FindRegister)
-                {
-                    ModelState.AddModelError("", "Ein Benutzer mit diesem Namen existiert bereit");
-                    return this.View(model);
-                }
-                else
-                {
-                    Repository.Vorname = model.Vorname;
-                    Repository.Nachname = model.Nachname;
-                    Repository.Adresse = model.Adresse;
-                    Repository.Benutzername = model.Benutzername;
-                    Repository.E_Mail = model.E_Mail;
-                    Repository.IDE_Delete_State = false;
-                    Repository.Land = model.Land;
-                    Repository.Passwort = model.Passwort.Trim();
-                    Repository.Postleitzahl = model.Postleitzahl;
-                    Repository.Stadt = model.Stadt;
-                    Repository.Telefon = model.Telefon;
-                    Repository.Id_Role = 2;
-
-                    Adapter.Entry(Repository).State = System.Data.Entity.EntityState.Added;
-                    Adapter.SaveChanges();
-                    ViewBag.Massege = "Neuer Benutzer erfolgreich erstellt";
-                    return this.View(model);
-                }
+                return this.View(model);
             }
+            bool FindRegister = Adapter.Benutzer.Any
+                  (x => x.Benutzername == model.Benutzername);
+
+            if (FindRegister)
+            {
+                ModelState.AddModelError("", "Ein Benutzer mit diesem Namen existiert bereit");
+                return this.View(model);
+            }
+
+            Repository.Vorname = model.Vorname;
+            Repository.Nachname = model.Nachname;
+            Repository.Adresse = model.Adresse;
+            Repository.Benutzername = model.Benutzername;
+            Repository.E_Mail = model.E_Mail;
+            Repository.IDE_Delete_State = false;
+            Repository.Land = model.Land;
+            Repository.Passwort = model.Passwort.Trim();
+            Repository.Postleitzahl = model.Postleitzahl;
+            Repository.Stadt = model.Stadt;
+            Repository.Telefon = model.Telefon;
+            Repository.Id_Role = 2;
+            try
+            {
+                Adapter.Benutzer.Add(Repository);
+                Adapter.SaveChanges();
+                Success("Neuer Benutzer erfolgreich erstellt");
+            }
+            catch
+            {
+                Error("Fehler beim Speichern. Bitte später noch einmal versuchen.");
+            }
+            return this.View(model);
         }
 
 
@@ -90,23 +89,20 @@ namespace Pouya.Controllers
                 return this.View(LoginModel);
             }
 
-            using (var Adapter = new Models.DatabaseContex())
-            {
-                var User = Adapter.Benutzer.FirstOrDefault
-                                  (p => p.Benutzername.ToLower().Trim() == LoginModel.Benutzername.ToLower().Trim()
-                                  &&
-                                  p.Passwort.ToLower() == LoginModel.Passwort.ToLower());
+            var User = Adapter.Benutzer.FirstOrDefault
+                              (p => p.Benutzername.ToLower().Trim() == LoginModel.Benutzername.ToLower().Trim()
+                              &&
+                              p.Passwort.ToLower() == LoginModel.Passwort.ToLower());
 
-                if (User == null)
-                {
-                    ModelState.AddModelError("", "Benutzername ist falsch");
-                    return View(LoginModel);
-                }
-                else
-                {
-                    System.Web.Security.FormsAuthentication.RedirectFromLoginPage(User.Benutzername, false);
-                    return this.RedirectToAction("Index");
-                }
+            if (User == null)
+            {
+                ModelState.AddModelError("", "Benutzername ist falsch");
+                return View(LoginModel);
+            }
+            else
+            {
+                System.Web.Security.FormsAuthentication.RedirectFromLoginPage(User.Benutzername, false);
+                return this.RedirectToAction("Index");
             }
         }
 
@@ -143,31 +139,21 @@ namespace Pouya.Controllers
         {
             var VM = new Models.FeedbackPageMV();
             VM.CreateForm = new Models.FeedbackModel();
-            using (var Adapter = new Models.DatabaseContex())
+            if (IsAdmin())
             {
-                bool IsAdmin = false;
-                if (User.Identity.IsAuthenticated)
-                {
-                    var UserName = User.Identity.Name;
-                    var UserAdmin = Adapter.Benutzer.FirstOrDefault(p => p.Benutzername.ToLower() == UserName.ToLower());
-                    if (UserAdmin != null && UserAdmin.Id_Role == 1)
-                    {
-                        IsAdmin = true;
-                        VM.FeedBackList = Adapter.Feedback
-                                                 .Where(p => !p.IsApproved && !p.IDE_Delete_State)
-                                                 .OrderByDescending(p => p.CreatedDate)
-                                                 .ToList();
-                        ViewBag.IsAdmin = IsAdmin;
-                    }
-                }
-                else
-                {
-                    VM.FeedBackList = Adapter.Feedback
-                                             .Where(p => p.IsApproved && !p.IDE_Delete_State)
-                                             .OrderByDescending(p => p.CreatedDate)
-                                             .ToList();
-                }
+                VM.FeedBackList = Adapter.Feedback
+                                         .Where(p => !p.IsApproved && !p.IDE_Delete_State)
+                                         .OrderByDescending(p => p.CreatedDate)
+                                         .ToList();
             }
+            else
+            {
+                VM.FeedBackList = Adapter.Feedback
+                                         .Where(p => p.IsApproved && !p.IDE_Delete_State)
+                                         .OrderByDescending(p => p.CreatedDate)
+                                         .ToList();
+            }
+            ViewBag.IsAdmin = IsAdmin();
             return View(VM);
         }
 
@@ -178,40 +164,61 @@ namespace Pouya.Controllers
         {
             if (!ModelState.IsValid)
             {
-                using (var Adapter = new Models.DatabaseContex())
+                if (IsAdmin())
                 {
-                    model.CreateForm = new Models.FeedbackModel();
                     model.FeedBackList = Adapter.Feedback
-                    .Where(p => p.IsApproved && !p.IDE_Delete_State)
-                    .OrderByDescending(p => p.CreatedDate)
-                    .ToList();
-                    return View(model);
+                                             .Where(p => !p.IsApproved && !p.IDE_Delete_State)
+                                             .OrderByDescending(p => p.CreatedDate)
+                                             .ToList();
                 }
-            }
-
-            using (var Adapter = new Models.DatabaseContex())
-            {
-                var Repository = new Models.Feedback();
-
-                Repository.Name = model.CreateForm.Name;
-                Repository.Email = model.CreateForm.Email;
-                Repository.Text = model.CreateForm.Text;
-
-                Repository.IsApproved = false;
-                Repository.CreatedDate = DateTime.UtcNow;
-                Repository.IDE_Delete_State = false;
-
-                Adapter.Entry(Repository).State = System.Data.Entity.EntityState.Added;
-                Adapter.SaveChanges();
-                TempData["Success"] = "Vielen Dank! Ihr Feedback wurde erfolgreich gespeichert.";
-
-                model.FeedBackList = Adapter.Feedback
-                                            .Where(p => p.IsApproved && !p.IDE_Delete_State)
-                                            .OrderByDescending(p => p.CreatedDate)
-                                            .ToList();
+                else
+                {
+                    model.FeedBackList = Adapter.Feedback
+                                             .Where(p => p.IsApproved && !p.IDE_Delete_State)
+                                             .OrderByDescending(p => p.CreatedDate)
+                                             .ToList();
+                }
+                ViewBag.IsAdmin = IsAdmin();
                 return View(model);
             }
 
+            var Repository = new Models.Feedback();
+
+            Repository.Name = model.CreateForm.Name;
+            Repository.Email = model.CreateForm.Email;
+            Repository.Text = model.CreateForm.Text;
+
+            Repository.IsApproved = false;
+            Repository.CreatedDate = DateTime.UtcNow;
+            Repository.IDE_Delete_State = false;
+
+            try
+            {
+                Adapter.Feedback.Add(Repository);
+                Adapter.SaveChanges();
+                Success("Vielen Dank! Ihr Feedback wurde erfolgreich gespeichert.");
+            }
+            catch
+            {
+                Error("Fehler beim Speichern. Bitte später noch einmal versuchen.");
+            }
+
+            if (IsAdmin())
+            {
+                model.FeedBackList = Adapter.Feedback
+                                         .Where(p => !p.IsApproved && !p.IDE_Delete_State)
+                                         .OrderByDescending(p => p.CreatedDate)
+                                         .ToList();
+            }
+            else
+            {
+                model.FeedBackList = Adapter.Feedback
+                                         .Where(p => p.IsApproved && !p.IDE_Delete_State)
+                                         .OrderByDescending(p => p.CreatedDate)
+                                         .ToList();
+            }
+            ViewBag.IsAdmin = IsAdmin();
+            return View(model);
         }
 
 
@@ -219,33 +226,33 @@ namespace Pouya.Controllers
         [Authorize]
         public ActionResult BestätigungFeedback(int id)
         {
-            var UserName = User.Identity.Name;
             if (id <= 0)
             {
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
-            if (!User.Identity.IsAuthenticated)
+            if (!IsAdmin())
             {
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
             }
-            using (var Adapter = new Models.DatabaseContex())
+            var FindFeedback = Adapter.Feedback.Find(id);
+            if (FindFeedback == null)
             {
-                var AdminUser = Adapter.Benutzer
-                    .FirstOrDefault(p => p.Benutzername.ToLower() == UserName.ToLower()
-                    && p.Id_Role == 1);
-
-                var FindFeedback = Adapter.Feedback.Find(id);
-                if (AdminUser == null || FindFeedback == null)
-                {
-                    return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
-                }
-
-                FindFeedback.IsApproved = true;
-                FindFeedback.CreatedDate = DateTime.UtcNow;
-                Adapter.Entry(FindFeedback).State = System.Data.Entity.EntityState.Modified;
-                Adapter.SaveChanges();
-                TempData["Success"] = "Das Feedback wurde freigegeben.";
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
             }
+
+            FindFeedback.IsApproved = true;
+            FindFeedback.CreatedDate = DateTime.UtcNow;
+
+            try
+            {
+                Adapter.SaveChanges();
+                Success("Das Feedback wurde freigegeben.");
+            }
+            catch
+            {
+                Error("Fehler beim Speichern. Bitte später noch einmal versuchen.");
+            }
+
             return RedirectToAction("Contact");
         }
 
@@ -254,30 +261,29 @@ namespace Pouya.Controllers
         [Authorize]
         public ActionResult DeleteFeedback(int id)
         {
-            var UserName = User.Identity.Name;
             if (id <= 0)
             {
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
-            if (!User.Identity.IsAuthenticated)
+            if (!IsAdmin())
             {
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
             }
-            using (var Adapter = new Models.DatabaseContex())
-            {
-                var AdminUser = Adapter.Benutzer
-                    .FirstOrDefault(p => p.Benutzername.ToLower() == UserName.ToLower()
-                    && p.Id_Role == 1);
 
-                var FindFeedback = Adapter.Feedback.Find(id);
-                if (AdminUser == null || FindFeedback == null)
-                {
-                    return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
-                }
-                FindFeedback.IDE_Delete_State = true;
-                Adapter.Entry(FindFeedback).State = System.Data.Entity.EntityState.Modified;
+            var FindFeedback = Adapter.Feedback.Find(id);
+            if (FindFeedback == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
+            }
+            FindFeedback.IDE_Delete_State = true;
+            try
+            {
                 Adapter.SaveChanges();
-                TempData["Success"] = "Das Feedback wurde erfolgreich gelöscht.";
+                Success("Das Feedback wurde erfolgreich gelöscht.");
+            }
+            catch
+            {
+                Error("Fehler beim DeleteFeedback. Bitte später noch einmal versuchen.");
             }
             return RedirectToAction("Contact");
         }
@@ -287,12 +293,9 @@ namespace Pouya.Controllers
         [AllowAnonymous]
         public ActionResult DetailsFeedback(int id)
         {
-            using (var Adapter = new Models.DatabaseContex())
-            {
-                var item = Adapter.Feedback.Find(id);
-                if (item == null) return HttpNotFound();
-                return View(item);
-            }
+            var item = Adapter.Feedback.Find(id);
+            if (item == null) return HttpNotFound();
+            return View(item);
         }
     }
 }

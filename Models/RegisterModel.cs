@@ -38,7 +38,6 @@ namespace Pouya.Models
 
         [Display(Name = "Passwort")]
         [DataType(DataType.Password)]
-        //[RegularExpression("^[0-9]*$", ErrorMessage = "Bitte verwenden Sie eine Kombination von Zeichnen")]
         [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d).+$", ErrorMessage = "Passwort muss Buchstaben und Zahlen enthalten")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
         [MaxLength(10, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
@@ -65,7 +64,7 @@ namespace Pouya.Models
 
         [Display(Name = "Land")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
-        [MaxLength(10, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
+        [MaxLength(50, ErrorMessage = "Die Zeichenlänge darf 50 Zeichen nicht überschreiten")]
         [MinLength(2, ErrorMessage = "Die Zeichenlänge darf 2 Zeichen nicht unterschreiten")]
         public string Land { get; set; }
 
@@ -73,7 +72,7 @@ namespace Pouya.Models
 
         [Display(Name = "Stadt")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
-        [MaxLength(10, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
+        [MaxLength(50, ErrorMessage = "Die Zeichenlänge darf 50 Zeichen nicht überschreiten")]
         [MinLength(2, ErrorMessage = "Die Zeichenlänge darf 2 Zeichen nicht unterschreiten")]
         public string Stadt { get; set; }
 
@@ -81,7 +80,7 @@ namespace Pouya.Models
 
         [Display(Name = "Adresse")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
-        [MaxLength(50, ErrorMessage = "Die Zeichenlänge darf 50 Zeichen nicht überschreiten")]
+        [MaxLength(100, ErrorMessage = "Die Zeichenlänge darf 100 Zeichen nicht überschreiten")]
         [MinLength(5, ErrorMessage = "Die Zeichenlänge darf 5 Zeichen nicht unterschreiten")]
         public string Adresse { get; set; }
 
@@ -90,8 +89,6 @@ namespace Pouya.Models
         [Display(Name = "Postleitzahl")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
         [RegularExpression(@"^\d{5}$", ErrorMessage = "PLZ muss genau 5 Ziffern haben")]
-        //[MaxLength(10, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
-        //[MinLength(5, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht unterschreiten")]
         public string Postleitzahl { get; set; }
 
 
@@ -99,8 +96,6 @@ namespace Pouya.Models
         [Display(Name = "Telefon")]
         [Required(ErrorMessage = "Bitte füllen Sie dieses Feld aus")]
         [RegularExpression(@"^(\+49|0)[0-9\s]{7,15}$", ErrorMessage = "Ungültige Telefonnummer")]
-        //[MaxLength(12, ErrorMessage = "Die Zeichenlänge darf 10 Zeichen nicht überschreiten")]
-        //[MinLength(4, ErrorMessage = "Die Zeichenlänge darf 4 Zeichen nicht unterschreiten")]
         public string Telefon { get; set; }
 
     }
